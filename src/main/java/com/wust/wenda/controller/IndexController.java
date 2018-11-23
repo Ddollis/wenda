@@ -1,9 +1,16 @@
 package com.wust.wenda.controller;
 
+import com.wust.wenda.aspect.LogAspect;
 import com.wust.wenda.model.User;
+import com.wust.wenda.service.WendaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +22,17 @@ import java.util.*;
 @Controller
 public class IndexController {
 
+    @Autowired
+    WendaService wendaService;
+
+    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
+
+
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET})
     @ResponseBody
-    public String index() {
-        return "Hello Nowcoder";
+    public String index(HttpSession httpSession) {
+        logger.info("VISIT HOME");
+        return wendaService.getMessage(2) + "Hello Nowcoder" + httpSession.getAttribute("msg");
     }
 
     @RequestMapping(path = {"/profile/{groupId}/{userId}"})
@@ -45,7 +59,7 @@ public class IndexController {
         return "home";
     }
 
-    @RequestMapping("/request")
+    @RequestMapping(value = {"/request"}, method = {RequestMethod.GET})
     @ResponseBody
     public String request(Model model,
                           HttpServletResponse response,
@@ -69,7 +83,33 @@ public class IndexController {
         sb.append(request.getPathInfo() + "<br>");
         sb.append(request.getRequestURL() + "<br>");
 
-        response.addHeader("nowcoderId","HelloWust");
+        response.addHeader("nowcoderId", "HelloWust");
         return sb.toString();
+    }
+
+    @RequestMapping(value = {"/redirect/{code}"}, method = {RequestMethod.GET})
+    public RedirectView redirect(@PathVariable("code") int code,
+                                 HttpSession httpSession) {
+        httpSession.setAttribute("msg", "jump from redirect");
+        RedirectView red = new RedirectView("/", true);
+        if (code == 301) {
+            red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+        }
+        return red;
+    }
+
+    @RequestMapping(value = {"/admin"}, method = {RequestMethod.GET})
+    @ResponseBody
+    public String admin(@RequestParam("key") String key) {
+        if ("admin".equals(key)) {
+            return "hello admin";
+        }
+        throw new IllegalArgumentException("参数不对");
+    }
+
+    @ExceptionHandler()
+    @ResponseBody
+    public String error(Exception e) {
+        return "error:" + e.getMessage();
     }
 }
