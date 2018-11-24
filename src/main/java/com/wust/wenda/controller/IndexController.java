@@ -46,7 +46,7 @@ public class IndexController {
 
     @RequestMapping(path = {"/vm"}, method = {RequestMethod.GET})
     public String template(Model model) {
-        model.addAttribute("value1", "vvvvv1");
+        model.addAttribute("value1", "vvvvv12");
         List<String> colors = Arrays.asList(new String[]{"RED", "GREEN", "BLUE"});
         model.addAttribute("colors", colors);
 
