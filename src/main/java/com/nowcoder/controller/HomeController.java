@@ -27,16 +27,16 @@ public class HomeController {
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET})
     public String index(Model model) {
-//        List<Question> questionList = questionService.getLastestQuestions(0, 0, 10);
-//        List<ViewObject> vos = new ArrayList<ViewObject>();
-//
-//        for(Question question : questionList){
-//            ViewObject vo = new ViewObject();
-//            vo.set("question",question);
-//            vo.set("user",userService.getUser(question.getUserId()));
-//        }
-//
-//        model.addAttribute("vos",vos);
+        List<Question> questionList = questionService.getLastestQuestions(0, 0, 10);
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+
+        for(Question question : questionList){
+            ViewObject vo = new ViewObject();
+            vo.set("question",question);
+            vo.set("user",userService.getUser(question.getUserId()));
+        }
+
+        model.addAttribute("vos",vos);
         return "index";
     }
 
