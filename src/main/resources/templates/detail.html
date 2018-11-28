@@ -1,4 +1,5 @@
-#parse("header.html")
+<div th:include="header::header" xmlns:th="http://www.w3.org/1999/xhtml"></div>
+
 <link rel="stylesheet" href="../styles/detail.css">
 <div class="zg-wrap zu-main clearfix with-indention-votebar" itemscope="" itemtype="http://schema.org/Question"
      id="zh-single-question-page" data-urltoken="36301524" role="main">
@@ -22,28 +23,25 @@
             <div id="zh-question-title" data-editable="true" class="zm-editable-status-normal">
                 <h2 class="zm-item-title">
 
-                    <span class="zm-editable-content">$!{question.title}</span>
+                    <span class="zm-editable-content" th:text="${question.getTitle()}"></span>
 
                 </h2>
             </div>
             <div id="zh-question-detail" class="zm-item-rich-text zm-editable-status-normal">
-                <div class="zm-editable-content">$!{question.content}</div>
+                <div class="zm-editable-content" th:text="${question.getContent()}"></div>
             </div>
             <div class="zm-side-section">
                 <div class="zm-side-section-inner" id="zh-question-side-header-wrap">
-                    #if ($followed)
-                    <button class="follow-button zg-follow zg-btn-white js-follow-question" data-id="${question.id}"
-                            data-status="1">
+                    <button class="follow-button zg-follow zg-btn-white js-follow-question" th:data-id="${question.getId()}"
+                            data-status="1" th:if="${followed}">
                         取消关注
                     </button>
-                    #else
-                    <button class="follow-button zg-follow zg-btn-green js-follow-question" data-id="${question.id}">
+                    <button class="follow-button zg-follow zg-btn-green js-follow-question" th:data-id="${question.getId()}" th:if="!${followed}">
                         关注问题
                     </button>
-                    #end
                     <div class="zh-question-followers-sidebar">
                         <div class="zg-gray-normal">
-                            <a href="javascript:void(0);"><strong class="js-user-count">${followUsers.size()}</strong></a>人关注该问题
+                            <a href="javascript:void(0);"><strong class="js-user-count" th:text="${followUsers.size()}">${followUsers.size()}</strong></a>人关注该问题
                         </div>
                         <div class="list zu-small-avatar-list zg-clear js-user-list">
                             #foreach($vo in $followUsers)
@@ -142,6 +140,5 @@
         </div>
     </div>
 </div>
-#parse("js.html")
-<script type="text/javascript" src="/scripts/main/site/detail.js"></script>
-#parse("footer.html")
+#parse("js.html")<div th:include="js::js" xmlns:th="http://www.w3.org/1999/xhtml"></div><script type="text/javascript" src="/scripts/main/site/detail.js"></script>
+<div th:include="footer::footer" xmlns:th="http://www.w3.org/1999/xhtml"></div>
