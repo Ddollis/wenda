@@ -1,31 +1,30 @@
-#parse("header.html")
+<div th:include="header::header" xmlns:th="http://www.w3.org/1999/xhtml"></div>
+
 <link rel="stylesheet" media="all" href="../styles/letter.css">
 <div id="main">
     <div class="zg-wrap zu-main clearfix ">
         <ul class="letter-chatlist">
-             #foreach($message in $messages)
-            <li id="msg-item-4009580">
+            <li id="msg-item-4009580" th:each="message:${messages}">
                 <a class="list-head">
-                    <img alt="头像" src="${message.user.headUrl}">
+                    <img alt="头像" th:src="${message.get('headUrl')}">
                 </a>
                 <div class="tooltip fade right in">
                     <div class="tooltip-arrow"></div>
                     <div class="tooltip-inner letter-chat clearfix">
                         <div class="letter-info">
-                            <p class="letter-time">$data.format('yyyy-MM-dd HH:mm:ss', $message.message.createdDate)</p>
+                            <p class="letter-time" th:text="${#dates.format(message.get('message').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}"></p>
                             <!-- <a href="javascript:void(0);" id="del-link" name="4009580">删除</a> -->
                         </div>
-                        <p class="chat-content">
-                            $message.message.content
+                        <p class="chat-content" th:text="${message.get('message').getContent()}">
                         </p>
                     </div>
                 </div>
             </li>
-            #end
         </ul>
 
     </div>
 </div>
-#parse("js.html")
+<div th:include="js::js" xmlns:th="http://www.w3.org/1999/xhtml"></div>
+
 <script type="text/javascript" src="/scripts/main/site/detail.js"></script>
-#parse("footer.html")
+<div th:include="footer::footer" xmlns:th="http://www.w3.org/1999/xhtml"></div>
