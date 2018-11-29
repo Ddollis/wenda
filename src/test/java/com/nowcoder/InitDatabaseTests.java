@@ -26,34 +26,37 @@ public class InitDatabaseTests {
     QuestionDAO questionDAO;
 
     @Test
-    public void initDatabase() {
+    public void contextLoads() {
         Random random = new Random();
+//        jedisAdapter.getJedis().flushDB();
         for (int i = 0; i < 11; ++i) {
             User user = new User();
             user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png", random.nextInt(1000)));
-            user.setName(String.format("USER%d", i));
+            user.setName(String.format("USER%d", i + 1));
             user.setPassword("");
             user.setSalt("");
             userDAO.addUser(user);
 
-            user.setPassword("xxx");
+//            for (int j = 1; j < i; ++j) {
+//                followService.follow(j, EntityType.ENTITY_USER, i);
+//            }
+
+            user.setPassword("newpassword");
             userDAO.updatePassword(user);
 
             Question question = new Question();
             question.setCommentCount(i);
             Date date = new Date();
-            date.setTime(date.getTime() + 1000 * 3600 * i);
+            date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
             question.setCreatedDate(date);
-            question.setUserId(i+1);
-            question.setTitle(String.format("TITLE{%d}",i));
-            question.setContent(String.format("Balalalalal Content %d",i));
-
+            question.setUserId(i + 1);
+            question.setTitle(String.format("TITLE{%d}", i));
+            question.setContent(String.format("Balaababalalalal Content %d", i));
             questionDAO.addQuestion(question);
         }
-        Assert.assertEquals("xxx", userDAO.selectById(1).getPassword());
-        userDAO.deleteById(1);
-        Assert.assertNull(userDAO.selectById(1));
 
-//        questionDAO.selectLatestQuestions(0,0,10);
+        Assert.assertEquals("newpassword", userDAO.selectById(1).getPassword());
+        //userDAO.deleteById(1);
+        //Assert.assertNull(userDAO.selectById(1));
     }
 }

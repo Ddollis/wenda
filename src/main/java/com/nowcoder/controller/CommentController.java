@@ -4,6 +4,7 @@ import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.service.CommentService;
+import com.nowcoder.service.QuestionService;
 import com.nowcoder.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    QuestionService questionService;
+
 
     @RequestMapping(path = {"/addComment"}, method = {RequestMethod.POST})
     public String addComment(@RequestParam("questionId") int questionId,
@@ -43,6 +47,10 @@ public class CommentController {
             comment.setStatus(0);
 
             commentService.addComment(comment);
+
+            int count = commentService.getCommentCount(comment.getEntityId(),comment.getEntityType());
+            questionService.updateCommentCount(comment.getEntityId(),count);
+
         } catch (Exception e) {
             logger.error("增加评论失败" + e.getMessage());
         }
