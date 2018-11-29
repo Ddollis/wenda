@@ -66,33 +66,5 @@ public class CommentController {
         return "redirect:/question/" + String.valueOf(questionId);
     }
 
-    @RequestMapping(path = {"/msg/list"}, method = RequestMethod.GET)
-    public String conversationList(Model model) {
 
-        return "letter";
-    }
-
-    @RequestMapping(path = {"/msg/detail"}, method = RequestMethod.GET)
-    public String conversationDetail(Model model,
-                                     @RequestParam("conversationId") String conversationId) {
-        try {
-            List<Message> conversationList = messageService.getConversationDetail(conversationId, 0, 10);
-            List<ViewObject> messages = new ArrayList<>();
-            for (Message message : conversationList) {
-                ViewObject vo = new ViewObject();
-                vo.set("message", message);
-                User user = userService.getUser(message.getFromId());
-                if (user == null) {
-                    continue;
-                }
-                vo.set("headUrl", user.getHeadUrl());
-                vo.set("userId", user.getId());
-                messages.add(vo);
-            }
-            model.addAttribute("messages",messages);
-        } catch (Exception e) {
-            logger.error("获取详情消息页失败" + e.getMessage());
-        }
-        return "letterDetail";
-    }
 }
