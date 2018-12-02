@@ -31,7 +31,8 @@ public class IndexController {
     @ResponseBody
     public String index(HttpSession httpSession) {
         logger.info("VISIT HOME");
-        return wendaService.getMessage(2) + "Hello Nowcoder" + httpSession.getAttribute("msg");
+//        return wendaService.getMessage(2) + "Hello Nowcoder" + httpSession.getAttribute("msg");
+        return "index2.html";
     }
 
     @RequestMapping(path = {"/profile/{groupId}/{userId}"})
