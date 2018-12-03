@@ -3,9 +3,11 @@ package com.nowcoder.async;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 事件模型
+ */
 public class EventModel {
-    private EventType type;
-
+    private EventType type; // 事件类型
 
     private int actorId;
     private int entityType;
