@@ -9,10 +9,10 @@ import java.util.Map;
 public class EventModel {
     private EventType type; // 事件类型
 
-    private int actorId;
+    private int actorId; // 操作者id
     private int entityType;
     private int entityId;
-    private int entityOwnerId;
+    private int entityOwnerId; // 这个实体类拥有者的ID
 
     private Map<String, String> exts = new HashMap<>();
 

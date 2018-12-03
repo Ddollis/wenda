@@ -23,7 +23,13 @@ import java.util.Map;
 @Service
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
+    /**
+     * 事件配置
+     * Map<事件类型，事件处理程序的列表
+     * 比如：点赞事件有很多需要处理的列表全放进去
+     */
     private Map<EventType, List<EventHandler>> config = new HashMap<>();
+
     private ApplicationContext applicationContext;
 
     @Autowired
