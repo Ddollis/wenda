@@ -2,6 +2,9 @@ package com.nowcoder.model;
 
 import java.util.Date;
 
+/**
+ * Created by nowcoder on 2016/7/15.
+ */
 public class Question {
     private int id;
     private String title;
@@ -38,8 +41,8 @@ public class Question {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createDate) {
-        this.createdDate = createDate;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public int getUserId() {

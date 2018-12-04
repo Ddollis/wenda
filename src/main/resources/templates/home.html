@@ -1,31 +1,57 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html>
 <body>
 <pre>
-    <span th:text="${value1}"></span>
+    #*
+    你看不到我~~~~
+    *#
+    $!{value1}
+    $!{value2} ## 如果不存在，强制为空
+    ${value3}
 
-    colors:<span th:text="${colors}">colors</span>
-    <span th:each="color,iterStat : ${colors}">
-        This is color:
-        <span th:text="${iterStat.index}"></span>
-        <span th:text="${color}"></span>
-        <span th:text="${iterStat.count}"></span>
-    </span>
+    colors: $!{colors}
 
-    <table>
-        <tr th:each="map:${map}">
-            <td>Number:</td>
-            <td th:text="${map.key}"></td>
-            <td>Value:</td>
-            <td th:text="${map.value}"></td>
-        </tr>
-    </table>
+    #foreach($color in $colors)
+        This is Color $!{foreach.index}: $color, $!{foreach.count}
+    #end
 
-    <span th:text="${user.name}"></span>
-    <!--<span th:text="${user.description}"></span>-->
-    <!--<span th:text="${user.getDescription()}"></span>-->
+    #foreach($key in $map.keySet())
+        Number: $key, Value: $map.get($key)
+    #end
 
-    <span th:with="title"></span>
-    Title:<span th:text="${title}"></span>
+    #foreach($kv in $map.entrySet())
+        Number: $kv.key, Value: $kv.value
+    #end
+
+    User:  $!{user.name}
+    $!{user.description}
+    $!{user.getDescription()}
+
+    #set($title = "nowcoder_title")
+    Title: $!{title}
+
+
+    Parse: #parse("header.html")
+    Include: #include("header.html")
+
+    #macro (render_color, $index, $color)
+        Color Render Macro $index, $color
+    #end
+
+    #foreach($color in $colors)
+        #render_color($foreach.index, $color)
+    #end
+
+    #set($hello = "hello")
+    #set($helloworld1 = "$!{hello} world")
+    $!hello
+    $helloworld1
+    #set($helloworld2 = '$!{hello} world')
+    $helloworld2
+
+
+
+
+
 </pre>
 </body>
 </html>

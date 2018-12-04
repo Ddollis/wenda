@@ -15,23 +15,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
+/**
+ * Created by nowcoder on 2016/7/3.
+ */
 @Component
 public class PassportInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private UserDAO userDAO;
 
     @Autowired
     private LoginTicketDAO loginTicketDAO;
 
     @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
     private HostHolder hostHolder;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String ticket = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
+        if (httpServletRequest.getCookies() != null) {
+            for (Cookie cookie : httpServletRequest.getCookies()) {
                 if (cookie.getName().equals("ticket")) {
                     ticket = cookie.getValue();
                     break;
@@ -44,6 +47,7 @@ public class PassportInterceptor implements HandlerInterceptor {
             if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0) {
                 return true;
             }
+
             User user = userDAO.selectById(loginTicket.getUserId());
             hostHolder.setUser(user);
         }
@@ -51,14 +55,14 @@ public class PassportInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
         if (modelAndView != null && hostHolder.getUser() != null) {
             modelAndView.addObject("user", hostHolder.getUser());
         }
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
         hostHolder.clear();
     }
 }

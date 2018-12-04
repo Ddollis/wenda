@@ -2,14 +2,17 @@ package com.nowcoder.model;
 
 import java.util.Date;
 
+/**
+ * Created by nowcoder on 2016/7/9.
+ */
 public class Comment {
     private int id;
     private int userId;
     private int entityId;
     private int entityType;
+    private String content;
     private Date createdDate;
     private int status;
-    private String content;
 
     public int getId() {
         return id;
@@ -43,6 +46,14 @@ public class Comment {
         this.entityType = entityType;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -57,13 +68,5 @@ public class Comment {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 }

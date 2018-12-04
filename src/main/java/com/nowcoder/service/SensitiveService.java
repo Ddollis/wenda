@@ -1,6 +1,5 @@
 package com.nowcoder.service;
 
-import com.nowcoder.controller.QuestionController;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -17,39 +16,35 @@ import java.util.Map;
 @Service
 public class SensitiveService implements InitializingBean {
 
-    private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SensitiveService.class);
 
     /**
      * 默认敏感词替换符
      */
     private static final String DEFAULT_REPLACEMENT = "敏感词";
 
+
     private class TrieNode {
+
         /**
-         * true 表示关键词终结， false 继续
+         * true 关键词的终结 ； false 继续
          */
         private boolean end = false;
 
         /**
-         * key 表示下一个字符，value 表示对应的节点
+         * key下一个字符，value是对应的节点
          */
         private Map<Character, TrieNode> subNodes = new HashMap<>();
 
         /**
          * 向指定位置添加节点树
-         *
-         * @param key  下一个字符
-         * @param node 对应的节点
          */
         void addSubNode(Character key, TrieNode node) {
             subNodes.put(key, node);
         }
 
         /**
-         * 获取下一个节点
-         *
-         * @param key
-         * @return
+         * 获取下个节点
          */
         TrieNode getSubNode(Character key) {
             return subNodes.get(key);
@@ -66,40 +61,44 @@ public class SensitiveService implements InitializingBean {
         public int getSubNodeCount() {
             return subNodes.size();
         }
+
+
     }
+
 
     /**
      * 根节点
      */
     private TrieNode rootNode = new TrieNode();
 
+
+    /**
+     * 判断是否是一个符号
+     */
     private boolean isSymbol(char c) {
         int ic = (int) c;
-        //0x2E80 - 0x9FFF 东亚文字范围
+        // 0x2E80-0x9FFF 东亚文字范围
         return !CharUtils.isAsciiAlphanumeric(c) && (ic < 0x2E80 || ic > 0x9FFF);
     }
 
+
     /**
      * 过滤敏感词
-     * @param text
-     * @return
      */
     public String filter(String text) {
         if (StringUtils.isBlank(text)) {
             return text;
         }
-
         String replacement = DEFAULT_REPLACEMENT;
         StringBuilder result = new StringBuilder();
 
         TrieNode tempNode = rootNode;
-        int begin = 0;//回滚数
-        int position = 0;//当前比较的位置
+        int begin = 0; // 回滚数
+        int position = 0; // 当前比较的位置
 
         while (position < text.length()) {
             char c = text.charAt(position);
-
-            //空格直接跳过
+            // 空格直接跳过
             if (isSymbol(c)) {
                 if (tempNode == rootNode) {
                     result.append(c);
@@ -113,20 +112,20 @@ public class SensitiveService implements InitializingBean {
 
             // 当前位置的匹配结束
             if (tempNode == null) {
-                // 以 begin 开始的字符串不存在敏感词
+                // 以begin开始的字符串不存在敏感词
                 result.append(text.charAt(begin));
                 // 跳到下一个字符开始测试
                 position = begin + 1;
                 begin = position;
-                // 回到树的初始节点
+                // 回到树初始节点
                 tempNode = rootNode;
             } else if (tempNode.isKeywordEnd()) {
-                // 发现敏感词，从 begin 到 position 的位置用 replacement 替换掉
+                // 发现敏感词， 从begin到position的位置用replacement替换掉
                 result.append(replacement);
                 position = position + 1;
                 begin = position;
                 tempNode = rootNode;
-            }else{
+            } else {
                 ++position;
             }
         }
@@ -134,7 +133,6 @@ public class SensitiveService implements InitializingBean {
         result.append(text.substring(begin));
 
         return result.toString();
-
     }
 
     private void addWord(String lineTxt) {
@@ -161,6 +159,7 @@ public class SensitiveService implements InitializingBean {
             }
         }
     }
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
