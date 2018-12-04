@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by nowcoder on 2016/7/22.
- */
+
 @Controller
 public class QuestionController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -74,5 +72,4 @@ public class QuestionController {
         }
         return WendaUtil.getJSONString(1, "失败");
     }
-
 }
