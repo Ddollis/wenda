@@ -16,9 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-/**
- * Created by nowcoder on 2016/7/10.
- */
+
+
 //@Controller
 public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
@@ -30,7 +29,7 @@ public class IndexController {
     @ResponseBody
     public String index(HttpSession httpSession) {
         logger.info("VISIT HOME");
-        return wendaService.getMessage(2) + "Hello NowCoder" + httpSession.getAttribute("msg");
+        return wendaService.getMessage(2) + " Hello NowCoder " + httpSession.getAttribute("msg");
     }
 
     @RequestMapping(path = {"/profile/{groupId}/{userId}"})
@@ -38,14 +37,19 @@ public class IndexController {
     public String profile(@PathVariable("userId") int userId,
                           @PathVariable("groupId") String groupId,
                           @RequestParam(value = "type", defaultValue = "1") int type,
-                          @RequestParam(value = "key", required = false) String key) {
+                          @RequestParam(value = "key", required = false) String key) { // required 代表是否是必须的
         return String.format("Profile Page of %s / %d, t:%d k: %s", groupId, userId, type, key);
     }
 
+    /**
+     * 模板测试
+     * @param model
+     * @return
+     */
     @RequestMapping(path = {"/vm"}, method = {RequestMethod.GET})
     public String template(Model model) {
         model.addAttribute("value1", "vvvvv1");
-        List<String> colors = Arrays.asList(new String[]{"RED", "GREEN", "BLUE"});
+        List<String> colors = Arrays.asList(new String[]{"RED", "GREEN", "BLUE"}); // 把数组转换成集合 这样后的 list 不能使用修改集合的方法
         model.addAttribute("colors", colors);
 
         Map<String, String> map = new HashMap<>();
@@ -57,13 +61,22 @@ public class IndexController {
         return "home";
     }
 
+    /**
+     * 查看request 属性
+     * @param model
+     * @param response
+     * @param request
+     * @param httpSession
+     * @param sessionId
+     * @return
+     */
     @RequestMapping(path = {"/request"}, method = {RequestMethod.GET})
     @ResponseBody
     public String request(Model model, HttpServletResponse response,
                            HttpServletRequest request,
                            HttpSession httpSession,
-                          @CookieValue("JSESSIONID") String sessionId) {
-        StringBuilder sb = new StringBuilder();
+                          @CookieValue("JSESSIONID") String sessionId) { // @CookieValue注解用于将请求的cookie数据映射到功能处理方法的参数上
+        StringBuilder sb = new StringBuilder(); // stringbuffer和stringbuilder的区别？
         sb.append("COOKIEVALUE:" + sessionId);
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -86,6 +99,12 @@ public class IndexController {
         return sb.toString();
     }
 
+    /**
+     * 重定向
+     * @param code
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(path = {"/redirect/{code}"}, method = {RequestMethod.GET})
     public RedirectView redirect(@PathVariable("code") int code,
                                  HttpSession httpSession) {
@@ -94,7 +113,7 @@ public class IndexController {
         if (code == 301) {
             red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         }
-        return  red;
+        return red;
     }
 
     @RequestMapping(path = {"/admin"}, method = {RequestMethod.GET})
@@ -103,7 +122,7 @@ public class IndexController {
         if ("admin".equals(key)) {
             return "hello admin";
         }
-        throw  new IllegalArgumentException("参数不对");
+        throw new IllegalArgumentException("参数不对");
     }
 
     @ExceptionHandler()
