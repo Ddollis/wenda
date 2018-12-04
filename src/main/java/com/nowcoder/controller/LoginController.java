@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * Created by nowcoder on 2016/7/2.
+ * 登录注册控制层
  */
 @Controller
 public class LoginController {
@@ -26,6 +26,16 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    /**
+     * 注册
+     * @param model
+     * @param username
+     * @param password
+     * @param next 跳转的页面
+     * @param rememberme 记住我
+     * @param response
+     * @return
+     */
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     public String reg(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
