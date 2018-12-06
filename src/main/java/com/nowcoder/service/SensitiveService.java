@@ -24,7 +24,7 @@ public class SensitiveService implements InitializingBean {
     private static final String DEFAULT_REPLACEMENT = "敏感词";
 
 
-    private class TrieNode {
+    private class TrieNode { //字典树
 
         /**
          * true 关键词的终结 ； false 继续
