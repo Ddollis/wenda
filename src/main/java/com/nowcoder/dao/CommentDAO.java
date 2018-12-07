@@ -5,9 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-/**
- * Created by nowcoder on 2016/7/9.
- */
+
 @Mapper
 public interface CommentDAO {
     String TABLE_NAME = " comment ";
@@ -27,4 +25,7 @@ public interface CommentDAO {
 
     @Select({"select count(id) from ", TABLE_NAME, " where entity_id=#{entityId} and entity_type=#{entityType} "})
     int getCommentCount(@Param("entityId") int entityId, @Param("entityType") int entityType);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
+    Comment getCommentById(int id);
 }
