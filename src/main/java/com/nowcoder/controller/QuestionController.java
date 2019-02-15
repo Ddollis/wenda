@@ -18,7 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Created by nowcoder on 2016/7/22.
+ */
 @Controller
 public class QuestionController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -108,7 +110,7 @@ public class QuestionController {
             if (questionService.addQuestion(question) > 0) {
                 eventProducer.fireEvent(new EventModel(EventType.ADD_QUESTION)
                         .setActorId(question.getUserId()).setEntityId(question.getId())
-                        .setExt("title", question.getTitle()).setExt("content", question.getContent()));
+                .setExt("title", question.getTitle()).setExt("content", question.getContent()));
                 return WendaUtil.getJSONString(0);
             }
         } catch (Exception e) {
@@ -116,4 +118,5 @@ public class QuestionController {
         }
         return WendaUtil.getJSONString(1, "失败");
     }
+
 }

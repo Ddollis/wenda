@@ -3,6 +3,9 @@ package com.nowcoder.async;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by nowcoder on 2016/7/30.
+ */
 public class EventModel {
     private EventType type;
     private int actorId;
@@ -10,15 +13,25 @@ public class EventModel {
     private int entityId;
     private int entityOwnerId;
 
-    private Map<String, String> exts = new HashMap<>();
+    private Map<String, String> exts = new HashMap<String, String>();
 
     public EventModel() {
 
     }
 
+    public EventModel setExt(String key, String value) {
+        exts.put(key, value);
+        return this;
+    }
+
     public EventModel(EventType type) {
         this.type = type;
     }
+
+    public String getExt(String key) {
+        return exts.get(key);
+    }
+
 
     public EventType getType() {
         return type;
@@ -62,15 +75,6 @@ public class EventModel {
 
     public EventModel setEntityOwnerId(int entityOwnerId) {
         this.entityOwnerId = entityOwnerId;
-        return this;
-    }
-
-    public String getExt(String key) {
-        return exts.get(key);
-    }
-
-    public EventModel setExt(String key, String value) {
-        exts.put(key, value);
         return this;
     }
 

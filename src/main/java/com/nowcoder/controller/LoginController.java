@@ -1,26 +1,25 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventHandler;
 import com.nowcoder.async.EventModel;
 import com.nowcoder.async.EventProducer;
 import com.nowcoder.async.EventType;
 import com.nowcoder.service.UserService;
+import com.nowcoder.util.WendaUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * 登录注册控制层
+ * Created by nowcoder on 2016/7/2.
  */
 @Controller
 public class LoginController {
@@ -32,22 +31,11 @@ public class LoginController {
     @Autowired
     EventProducer eventProducer;
 
-    /**
-     * 注册
-     *
-     * @param model
-     * @param username
-     * @param password
-     * @param next       跳转的页面
-     * @param rememberme 记住我
-     * @param response
-     * @return
-     */
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     public String reg(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
                       @RequestParam("next") String next,
-                      @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
+                      @RequestParam(value="rememberme", defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
         try {
             Map<String, Object> map = userService.register(username, password);
@@ -55,7 +43,7 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
                 if (rememberme) {
-                    cookie.setMaxAge(3600 * 24 * 5);
+                    cookie.setMaxAge(3600*24*5);
                 }
                 response.addCookie(cookie);
                 if (StringUtils.isNotBlank(next)) {
@@ -66,6 +54,7 @@ public class LoginController {
                 model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
+
         } catch (Exception e) {
             logger.error("注册异常" + e.getMessage());
             model.addAttribute("msg", "服务器错误");
@@ -82,8 +71,8 @@ public class LoginController {
     @RequestMapping(path = {"/login/"}, method = {RequestMethod.POST})
     public String login(Model model, @RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        @RequestParam(value = "next", required = false) String next,
-                        @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
+                        @RequestParam(value="next", required = false) String next,
+                        @RequestParam(value="rememberme", defaultValue = "false") boolean rememberme,
                         HttpServletResponse response) {
         try {
             Map<String, Object> map = userService.login(username, password);
@@ -91,15 +80,13 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
                 if (rememberme) {
-                    cookie.setMaxAge(3600 * 24 * 5);
+                    cookie.setMaxAge(3600*24*5);
                 }
                 response.addCookie(cookie);
 
-                EventModel event = new EventModel(EventType.LOGIN)
-                        .setExt("username", username).setExt("email", "mrqindi@163.com")
-                        .setActorId((int) map.get("userId"));
-
-                eventProducer.fireEvent(event);
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExt("username", username).setExt("email", "zjuyxy@qq.com")
+                        .setActorId((int)map.get("userId")));
 
                 if (StringUtils.isNotBlank(next)) {
                     return "redirect:" + next;

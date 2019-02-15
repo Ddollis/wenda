@@ -8,16 +8,17 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
-
+/**
+ * Created by nowcoder on 2016/7/24.
+ */
 @Service
 public class CommentService {
     @Autowired
-    private CommentDAO commentDAO;
+    CommentDAO commentDAO;
 
     @Autowired
     SensitiveService sensitiveService;
 
-    //通过实体获得评论
     public List<Comment> getCommentsByEntity(int entityId, int entityType) {
         return commentDAO.selectCommentByEntity(entityId, entityType);
     }

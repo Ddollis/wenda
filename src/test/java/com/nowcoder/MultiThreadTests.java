@@ -3,6 +3,9 @@ package com.nowcoder;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Created by nowcoder on 2016/7/24.
+ */
 class MyThread extends Thread {
     private int tid;
 
@@ -25,11 +28,9 @@ class MyThread extends Thread {
 
 class Consumer implements Runnable {
     private BlockingQueue<String> q;
-
     public Consumer(BlockingQueue<String> q) {
         this.q = q;
     }
-
     @Override
     public void run() {
         try {
@@ -44,17 +45,15 @@ class Consumer implements Runnable {
 
 class Producer implements Runnable {
     private BlockingQueue<String> q;
-
     public Producer(BlockingQueue<String> q) {
         this.q = q;
     }
-
     @Override
     public void run() {
         try {
             for (int i = 0; i < 100; ++i) {
                 Thread.sleep(1000);
-                q.put(String.valueOf(i));
+                q.put(String .valueOf(i));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +64,7 @@ class Producer implements Runnable {
 public class MultiThreadTests {
     public static void testThread() {
         for (int i = 0; i < 10; ++i) {
-//            new MyThread(i).start();
+            //new MyThread(i).start();
         }
 
         for (int i = 0; i < 10; ++i) {
@@ -76,7 +75,7 @@ public class MultiThreadTests {
                     try {
                         for (int j = 0; j < 10; ++j) {
                             Thread.sleep(1000);
-                            System.out.println(String.format("T2 %d %d", finalI, j));
+                            System.out.println(String.format("T2 %d: %d:", finalI, j));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -111,6 +110,18 @@ public class MultiThreadTests {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void testSynchronized() {
+        for (int i = 0; i < 10; ++i) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    testSynchronized1();
+                    testSynchronized2();
+                }
+            }).start();
         }
     }
 
@@ -241,7 +252,7 @@ public class MultiThreadTests {
         }
     }
 
-    public static void testAtomic() {
+    public static  void testAtomic() {
         //testWithoutAtomic();
         testWithAtomic();
     }
@@ -265,21 +276,13 @@ public class MultiThreadTests {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
-//        testThread();
-        testSynchronized();
-    }
-
-    private static void testSynchronized() {
-        for (int i = 0; i < 10; ++i) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    testSynchronized1();
-                    testSynchronized2();
-                }
-            }).start();
-        }
+    public static void main(String[] argv) {
+        //testThread();
+        //testSynchronized();
+        //testBlockingQueue();
+        //testThreadLocal();
+        //testExecutor();
+        //testAtomic();
+        testFuture();
     }
 }

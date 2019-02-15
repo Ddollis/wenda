@@ -2,10 +2,12 @@ package com.nowcoder.model;
 
 import org.springframework.stereotype.Component;
 
-//不清楚是哪个层面用 component
+/**
+ * Created by nowcoder on 2016/7/3.
+ */
 @Component
 public class HostHolder {
-    private static ThreadLocal<User> users = new ThreadLocal<User>(); // 线程本地变量
+    private static ThreadLocal<User> users = new ThreadLocal<User>();
 
     public User getUser() {
         return users.get();
@@ -16,6 +18,6 @@ public class HostHolder {
     }
 
     public void clear() {
-        users.remove();
+        users.remove();;
     }
 }

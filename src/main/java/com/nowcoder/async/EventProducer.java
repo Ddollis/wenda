@@ -6,6 +6,12 @@ import com.nowcoder.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+/**
+ * Created by nowcoder on 2016/7/30.
+ */
 @Service
 public class EventProducer {
     @Autowired
@@ -13,9 +19,7 @@ public class EventProducer {
 
     public boolean fireEvent(EventModel eventModel) {
         try {
-//            System.out.println(eventModel);
             String json = JSONObject.toJSONString(eventModel);
-//            System.out.println(json);
             String key = RedisKeyUtil.getEventQueueKey();
             jedisAdapter.lpush(key, json);
             return true;
@@ -23,6 +27,4 @@ public class EventProducer {
             return false;
         }
     }
-
-
 }

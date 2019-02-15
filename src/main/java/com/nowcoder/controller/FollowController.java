@@ -17,6 +17,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 
 import java.util.*;
 
+/**
+ * Created by nowcoder on 2016/7/30.
+ */
 @Controller
 public class FollowController {
     @Autowired

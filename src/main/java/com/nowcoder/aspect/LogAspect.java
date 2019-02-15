@@ -10,20 +10,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-
 /**
- * log的切片
+ * Created by nowcoder on 2016/7/10.
  */
 @Aspect
 @Component
 public class LogAspect {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    /**
-     * 在执行 controller 方法前 获取传入目标方法的参数对象
-     *
-     * @param joinPoint
-     */
     @Before("execution(* com.nowcoder.controller.*Controller.*(..))")
     public void beforeMethod(JoinPoint joinPoint) {
         StringBuilder sb = new StringBuilder();
@@ -32,14 +26,11 @@ public class LogAspect {
                 sb.append("arg:" + arg.toString() + "|");
             }
         }
-        logger.info("before method:" + sb.toString() + "||" + new Date());
+        logger.info("before method:" + sb.toString());
     }
 
-    /**
-     * 执行后 打印时间
-     */
     @After("execution(* com.nowcoder.controller.IndexController.*(..))")
     public void afterMethod() {
-        logger.info("after method:" + new Date());
+        logger.info("after method" + new Date());
     }
 }

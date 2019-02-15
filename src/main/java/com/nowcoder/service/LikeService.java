@@ -2,15 +2,17 @@ package com.nowcoder.service;
 
 import com.nowcoder.util.JedisAdapter;
 import com.nowcoder.util.RedisKeyUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.JedisSentinelPool;
 
+/**
+ * Created by nowcoder on 2016/7/30.
+ */
 @Service
 public class LikeService {
     @Autowired
     JedisAdapter jedisAdapter;
+
 
     public long getLikeCount(int entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);

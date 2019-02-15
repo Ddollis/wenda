@@ -4,6 +4,7 @@ import com.nowcoder.async.EventHandler;
 import com.nowcoder.async.EventModel;
 import com.nowcoder.async.EventType;
 import com.nowcoder.util.MailSender;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Created by nowcoder on 2016/7/30.
+ */
 @Component
 public class LoginExceptionHandler implements EventHandler {
     @Autowired

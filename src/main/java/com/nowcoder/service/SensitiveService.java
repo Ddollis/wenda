@@ -24,7 +24,7 @@ public class SensitiveService implements InitializingBean {
     private static final String DEFAULT_REPLACEMENT = "敏感词";
 
 
-    private class TrieNode { //字典树
+    private class TrieNode {
 
         /**
          * true 关键词的终结 ； false 继续
@@ -181,10 +181,11 @@ public class SensitiveService implements InitializingBean {
         }
     }
 
+    /*
     public static void main(String[] argv) {
         SensitiveService s = new SensitiveService();
         s.addWord("色情");
         s.addWord("好色");
         System.out.print(s.filter("你好X色**情XX"));
-    }
+    }*/
 }
