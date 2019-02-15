@@ -13,7 +13,9 @@ public class EventProducer {
 
     public boolean fireEvent(EventModel eventModel) {
         try {
+//            System.out.println(eventModel);
             String json = JSONObject.toJSONString(eventModel);
+//            System.out.println(json);
             String key = RedisKeyUtil.getEventQueueKey();
             jedisAdapter.lpush(key, json);
             return true;
@@ -21,4 +23,6 @@ public class EventProducer {
             return false;
         }
     }
+
+
 }

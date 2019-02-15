@@ -1,10 +1,10 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.model.*;
-import com.nowcoder.service.CommentService;
-import com.nowcoder.service.LikeService;
-import com.nowcoder.service.QuestionService;
-import com.nowcoder.service.UserService;
+import com.nowcoder.service.*;
 import com.nowcoder.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -26,16 +27,22 @@ public class QuestionController {
     QuestionService questionService;
 
     @Autowired
-    CommentService commentService;
-
-    @Autowired
     HostHolder hostHolder;
 
     @Autowired
     UserService userService;
 
     @Autowired
+    CommentService commentService;
+
+    @Autowired
+    FollowService followService;
+
+    @Autowired
     LikeService likeService;
+
+    @Autowired
+    EventProducer eventProducer;
 
     @RequestMapping(value = "/question/{qid}", method = {RequestMethod.GET})
     public String questionDetail(Model model, @PathVariable("qid") int qid) {
@@ -43,11 +50,10 @@ public class QuestionController {
         model.addAttribute("question", question);
 
         List<Comment> commentList = commentService.getCommentsByEntity(qid, EntityType.ENTITY_QUESTION);
-        List<ViewObject> vos = new ArrayList<>();
+        List<ViewObject> comments = new ArrayList<ViewObject>();
         for (Comment comment : commentList) {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
-
             if (hostHolder.getUser() == null) {
                 vo.set("liked", 0);
             } else {
@@ -56,9 +62,31 @@ public class QuestionController {
 
             vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_COMMENT, comment.getId()));
             vo.set("user", userService.getUser(comment.getUserId()));
-            vos.add(vo);
+            comments.add(vo);
         }
-        model.addAttribute("comments", vos);
+
+        model.addAttribute("comments", comments);
+
+        List<ViewObject> followUsers = new ArrayList<ViewObject>();
+        // 获取关注的用户信息
+        List<Integer> users = followService.getFollowers(EntityType.ENTITY_QUESTION, qid, 20);
+        for (Integer userId : users) {
+            ViewObject vo = new ViewObject();
+            User u = userService.getUser(userId);
+            if (u == null) {
+                continue;
+            }
+            vo.set("name", u.getName());
+            vo.set("headUrl", u.getHeadUrl());
+            vo.set("id", u.getId());
+            followUsers.add(vo);
+        }
+        model.addAttribute("followUsers", followUsers);
+        if (hostHolder.getUser() != null) {
+            model.addAttribute("followed", followService.isFollower(hostHolder.getUser().getId(), EntityType.ENTITY_QUESTION, qid));
+        } else {
+            model.addAttribute("followed", false);
+        }
 
         return "detail";
     }
@@ -78,6 +106,9 @@ public class QuestionController {
                 question.setUserId(hostHolder.getUser().getId());
             }
             if (questionService.addQuestion(question) > 0) {
+                eventProducer.fireEvent(new EventModel(EventType.ADD_QUESTION)
+                        .setActorId(question.getUserId()).setEntityId(question.getId())
+                        .setExt("title", question.getTitle()).setExt("content", question.getContent()));
                 return WendaUtil.getJSONString(0);
             }
         } catch (Exception e) {

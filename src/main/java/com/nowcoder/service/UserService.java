@@ -88,6 +88,7 @@ public class UserService {
 
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
+        map.put("userId",user.getId());
         return map;
     }
 
@@ -109,5 +110,10 @@ public class UserService {
 
     public void logout(String ticket) {
         loginTicketDAO.updateStatus(ticket, 1);
+    }
+
+
+    public static void main(String[] args){
+        System.out.println(UUID.randomUUID().toString());
     }
 }

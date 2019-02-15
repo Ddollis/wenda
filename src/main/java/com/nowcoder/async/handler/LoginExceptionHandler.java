@@ -1,4 +1,3 @@
-/*
 package com.nowcoder.async.handler;
 
 import com.nowcoder.async.EventHandler;
@@ -32,4 +31,3 @@ public class LoginExceptionHandler implements EventHandler {
         return Arrays.asList(EventType.LOGIN);
     }
 }
-*/

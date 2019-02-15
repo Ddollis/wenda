@@ -1,5 +1,8 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -26,12 +29,16 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     /**
      * 注册
+     *
      * @param model
      * @param username
      * @param password
-     * @param next 跳转的页面
+     * @param next       跳转的页面
      * @param rememberme 记住我
      * @param response
      * @return
@@ -40,7 +47,7 @@ public class LoginController {
     public String reg(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
                       @RequestParam("next") String next,
-                      @RequestParam(value="rememberme", defaultValue = "false") boolean rememberme,
+                      @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
         try {
             Map<String, Object> map = userService.register(username, password);
@@ -48,7 +55,7 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
                 if (rememberme) {
-                    cookie.setMaxAge(3600*24*5);
+                    cookie.setMaxAge(3600 * 24 * 5);
                 }
                 response.addCookie(cookie);
                 if (StringUtils.isNotBlank(next)) {
@@ -75,8 +82,8 @@ public class LoginController {
     @RequestMapping(path = {"/login/"}, method = {RequestMethod.POST})
     public String login(Model model, @RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        @RequestParam(value="next", required = false) String next,
-                        @RequestParam(value="rememberme", defaultValue = "false") boolean rememberme,
+                        @RequestParam(value = "next", required = false) String next,
+                        @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                         HttpServletResponse response) {
         try {
             Map<String, Object> map = userService.login(username, password);
@@ -84,9 +91,16 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
                 if (rememberme) {
-                    cookie.setMaxAge(3600*24*5);
+                    cookie.setMaxAge(3600 * 24 * 5);
                 }
                 response.addCookie(cookie);
+
+                EventModel event = new EventModel(EventType.LOGIN)
+                        .setExt("username", username).setExt("email", "mrqindi@163.com")
+                        .setActorId((int) map.get("userId"));
+
+                eventProducer.fireEvent(event);
+
                 if (StringUtils.isNotBlank(next)) {
                     return "redirect:" + next;
                 }

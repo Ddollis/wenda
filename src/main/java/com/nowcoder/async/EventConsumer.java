@@ -11,6 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@Service
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private Map<EventType, List<EventHandler>> config = new HashMap<>();
@@ -28,7 +31,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
+        Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);//从容器中找到所有的eventhandler
         if (beans != null) {
             for (Map.Entry<String, EventHandler> entry : beans.entrySet()) {
                 List<EventType> eventTypes = entry.getValue().getSupportEventTypes();
@@ -54,7 +57,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                             continue;
                         }
 
-                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
+                        EventModel eventModel = JSON.parseObject(message, EventModel.class);//解析出EventModel
                         if (!config.containsKey(eventModel.getType())) {
                             logger.error("不能识别的事件");
                             continue;

@@ -5,7 +5,9 @@ import com.nowcoder.dao.UserDAO;
 import com.nowcoder.model.EntityType;
 import com.nowcoder.model.Question;
 import com.nowcoder.model.User;
+import com.nowcoder.service.FollowService;
 import com.nowcoder.service.SensitiveService;
+import com.nowcoder.util.JedisAdapter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import redis.clients.jedis.Jedis;
 
 import java.util.Date;
 import java.util.Random;
@@ -30,6 +33,12 @@ public class InitDatabaseTests {
     @Autowired
     SensitiveService sensitiveUtil;
 
+    @Autowired
+    JedisAdapter jedisAdapter;
+
+    @Autowired
+    FollowService followService;
+
     @Test
     public void contextLoads() {
         Random random = new Random();
@@ -40,6 +49,12 @@ public class InitDatabaseTests {
             user.setPassword("");
             user.setSalt("");
             userDAO.addUser(user);
+
+
+            //互相关注
+            for(int j=0;j<i;++j){
+                followService.follow(j,EntityType.ENTITY_USER,i);
+            }
 
             user.setPassword("newpassword");
             userDAO.updatePassword(user);
