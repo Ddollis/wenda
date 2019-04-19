@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by anxi on 2016/8/28.
- */
+
 @Component
 public class AddQuestionHandler implements EventHandler {
     private static final Logger logger = LoggerFactory.getLogger(AddQuestionHandler.class);

@@ -3,9 +3,7 @@ package com.anxi.async;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by anxi on 2016/7/30.
- */
+
 public class EventModel {
     private EventType type;
     private int actorId;

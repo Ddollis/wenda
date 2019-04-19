@@ -8,7 +8,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = WendaApplication.class)
-@WebAppConfiguration
+@WebAppConfiguration // 开启web上下文测试
 public class WendaApplicationTests {
 
 	@Test

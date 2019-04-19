@@ -1,8 +1,6 @@
 package com.anxi.async;
 
-/**
- * Created by anxi on 2016/7/30.
- */
+
 public enum EventType {
     LIKE(0),
     COMMENT(1),

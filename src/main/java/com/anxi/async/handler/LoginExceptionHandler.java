@@ -12,9 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by anxi on 2016/7/30.
- */
+
 @Component
 public class LoginExceptionHandler implements EventHandler {
     @Autowired
